@@ -1,8 +1,10 @@
 #include <Wire.h>
+#include <AFMotor.h>
+
 #define pass (void)0
-# define I2C_SLAVE1_ADDRESS 11
-# define I2C_SLAVE2_ADDRESS 12
+#define I2C_SLAVE1_ADDRESS 11
 #define PAYLOAD_SIZE 2
+
 
 int n=0;
 
