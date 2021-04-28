@@ -84,10 +84,8 @@ void PinSetup()
 void motorSetup()
 {
     {
-        Right_front_Motor.run(RELEASE);
-        Left_front_Motor.run(RELEASE);
-        Right_back_Motor.run(RELEASE);
-        Left_back_Motor.run(RELEASE);
+        setspeed(speed);
+        stop();
     }
 }
 //----------------------------------mainloop--------------------
@@ -159,7 +157,10 @@ void turn_left()
 }
 void stop()
 {
-    setspeed(0);
+    Right_front_Motor.run(RELEASE);
+    Left_front_Motor.run(RELEASE);
+    Right_back_Motor.run(RELEASE);
+    Left_back_Motor.run(RELEASE);
 }
 
 void controll()
