@@ -83,10 +83,8 @@ void PinSetup()
 }
 void motorSetup()
 {
-    {
-        setspeed(speed);
-        stop();
-    }
+    setspeed(speed);
+    stop();
 }
 //----------------------------------mainloop--------------------
 void loop()
