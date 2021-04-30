@@ -13,7 +13,14 @@ const int Sensor_4_EchoPin = 11;
 const int Sensor_4_TrigPin = 12;
 
 
+//-----------Car_properties---------------------------
 
+const float car_length = 20;
+const float car_width = 10;
+
+
+
+//---------------------------------
 
 AF_DCMotor motor1(1);
 AF_DCMotor motor2(2);
@@ -33,6 +40,7 @@ void setup()
     motor3.setSpeed(255);
     motor4.setSpeed(255);
     Stop();
+    //SensorsSetup();
 }
 
 
@@ -41,7 +49,7 @@ void loop()
 
     bt=Serial.read();
     control();
-    //readSensors();
+    //park();
 
 }
 
@@ -111,10 +119,10 @@ void Stop()
     motor4.run(RELEASE);
 }
 //--------------------------------SENSORS-----------------------------------------------
-void readSensors()
+void SensorsSetup()
 {
 
-    inMode(Sensor_1_TrigPin, OUTPUT);
+    pinMode(Sensor_1_TrigPin, OUTPUT);
     pinMode(Sensor_1_EchoPin, INPUT);
 
     pinMode(Sensor_2_TrigPin, OUTPUT);
@@ -146,5 +154,36 @@ float GetDistance(int TrigPin, int EchoPin)
     duration = pulseIn(EchoPin, HIGH);
     distance = duration * 0.034 / 2;
     return distance;
+}
+
+void park()
+{
+    return;
+}
+
+void scan_for_parking()
+{
+
+    float front_scan;
+    float back_scan;
+
+
+    //--------------for right side-------------
+
+    front_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+    back_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+
+    float change = front_scan - back_scan;
+
+    if (change > car_width)
+    {
+        float spot_width = change;
+
+    }
+
+
+
 
 }
+
+
