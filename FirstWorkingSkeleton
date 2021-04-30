@@ -24,10 +24,10 @@ const float car_width = 10;
 
 //---------------------------------
 
-AF_DCMotor motor1(1);
-AF_DCMotor motor2(2);
-AF_DCMotor motor3(3);
-AF_DCMotor motor4(4);
+AF_DCMotor motor1(1); //left back motor
+AF_DCMotor motor2(2); // right back motor
+AF_DCMotor motor3(3); //right front motor
+AF_DCMotor motor4(4); //left front motor
 
 
 //--------------------------------------
