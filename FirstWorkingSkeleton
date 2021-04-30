@@ -24,8 +24,12 @@ const int Sensor_6_TrigPin = 16;
 
 const float car_length = 20;
 const float car_width = 10;
+int speed;
 
+//-------------Spot properties----------
 
+float spot_length;
+float spot_width;
 
 //---------------------------------
 
@@ -39,14 +43,22 @@ AF_DCMotor motor4(4); //left front motor
 
 char CarMode = 'C'; // C for control mode, A for parking
 char bt='S';
+//-------------EXTREMALY IMPORTANT-----------------
+int parking_mode = 0; //TODO describe every scenario with appropriate number
+/* 0 - no spot found, keep looking
+ * 1 - spot found, looking for end
+ * 2 - end found, started parking protocol
+ * 200 - PARKED
+ */
+
 void setup()
 {
     Serial.begin(9600);
 
-    motor1.setSpeed(255);
-    motor2.setSpeed(255);
-    motor3.setSpeed(255);
-    motor4.setSpeed(255);
+    motor1.setSpeed(speed);
+    motor2.setSpeed(speed);
+    motor3.setSpeed(speed);
+    motor4.setSpeed(speed);
     Stop();
     //SensorsSetup();
 }
@@ -56,14 +68,28 @@ void loop()
 {
 
     bt=Serial.read();
-    if (CarMode == 'C')
-        control();
-    else
-        park();
+    control_type();
 
 }
 
 //-----------------------CONTROLING-------------------------
+void control_type()
+{
+    if(bt=='X')
+    {
+        CarMode='A';
+    }
+    if(bt=='x')
+    {
+        CarMode='C';
+    }
+
+    if (CarMode == 'C')
+        control();
+    else
+        park();
+}
+
 void control()
 {
     if(bt=='F')
@@ -128,6 +154,44 @@ void Stop()
     motor3.run(RELEASE);
     motor4.run(RELEASE);
 }
+
+//------------------RIDE N -------------------;
+
+void setSpeed(int newSpeed)
+{
+    motor1.setSpeed(newSpeed);
+    motor2.setSpeed(newSpeed);
+    motor3.setSpeed(newSpeed);
+    motor4.setSpeed(newSpeed);
+}
+void go_forward(int newSpeed)
+{
+    setSpeed(newSpeed);
+    forward();
+    setSpeed(speed);
+}
+
+void go_back(int newSpeed)
+{
+    setSpeed(newSpeed);
+    backward();
+    setSpeed(speed);
+}
+
+void go_right(int newSpeed)
+{
+    setSpeed(newSpeed);
+    right();
+    setSpeed(speed);
+}
+
+void go_left(int newSpeed)
+{
+    setSpeed(newSpeed);
+    left();
+    setSpeed(speed);
+}
+
 //--------------------------------SENSORS-----------------------------------------------
 void SensorsSetup()
 {
@@ -185,14 +249,29 @@ void scan_for_parking()
 
     float change = front_scan - back_scan;
 
-    if (change > car_width)
+    if (change > car_width && parking_mode==0) //szuka roznicy pomiedzy przednim i tylnim
     {
-        float spot_width = change;
-
+        spot_width = change;
+        parking_mode = 1;
     }
 
+    if (parking_mode==1 && change < 1) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
+    {
+        parallel_parking();
+        parking_mode = 200;
+    }
 
+    else
+    {
+        forward();
+    }
 
+}
+
+void parallel_parking()
+{
+
+    return;
 
 }
 
