@@ -15,6 +15,11 @@ const int Sensor_5_EchoPin = 13;
 const int Sensor_5_TrigPin = 14;
 const int Sensor_6_EchoPin = 15;
 const int Sensor_6_TrigPin = 16;
+/*  MAP TODO MAP ALL SENSORS
+ *  Sensor1 - back
+ *  Sensor2 - back_right
+ *  Sensor3 - front_right
+ */
 //-----------Car_properties---------------------------
 
 const float car_length = 20;
@@ -32,6 +37,7 @@ AF_DCMotor motor4(4); //left front motor
 
 //--------------------------------------
 
+char CarMode = 'C'; // C for control mode, A for parking
 char bt='S';
 void setup()
 {
@@ -50,8 +56,10 @@ void loop()
 {
 
     bt=Serial.read();
-    control();
-    //park();
+    if (CarMode == 'C')
+        control();
+    else
+        park();
 
 }
 
