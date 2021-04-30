@@ -11,6 +11,10 @@ const int Sensor_3_EchoPin = 9;
 const int Sensor_3_TrigPin = 10;
 const int Sensor_4_EchoPin = 11;
 const int Sensor_4_TrigPin = 12;
+const int Sensor_5_EchoPin = 13;
+const int Sensor_5_TrigPin = 14;
+const int Sensor_6_EchoPin = 15;
+const int Sensor_6_TrigPin = 16;
 
 
 //-----------Car_properties---------------------------
