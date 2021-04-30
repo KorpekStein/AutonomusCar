@@ -233,6 +233,7 @@ float GetDistance(int TrigPin, int EchoPin)
 void park()
 {
     return;
+    //TODO implement parking scan
 }
 
 void scan_for_parking()
@@ -253,10 +254,12 @@ void scan_for_parking()
     {
         spot_width = change;
         parking_mode = 1;
+        //TODO start clock so we can measure spot length
     }
 
     if (parking_mode==1 && change < 1) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
+        //TODO check conditions whether do park parallel or vertical
         parallel_parking();
         parking_mode = 200;
     }
@@ -270,7 +273,7 @@ void scan_for_parking()
 
 void parallel_parking()
 {
-
+ //Funkcje do parkowania uzaleznione od wymiarow (formulka)
     return;
 
 }
