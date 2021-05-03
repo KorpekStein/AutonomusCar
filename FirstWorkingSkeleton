@@ -5,10 +5,12 @@
 
 //const int Sensor_1_EchoPin = 5;
 //const int Sensor_1_TrigPin = 6;
+
 const int Sensor_2_EchoPin = 23;
 const int Sensor_2_TrigPin = 22;
 const int Sensor_3_EchoPin = 24;
 const int Sensor_3_TrigPin = 25;
+
 /*
 const int Sensor_4_EchoPin = 11;
 const int Sensor_4_TrigPin = 12;
@@ -17,6 +19,8 @@ const int Sensor_5_TrigPin = 14;
 const int Sensor_6_EchoPin = 15;
 const int Sensor_6_TrigPin = 16;
 */
+
+
 const int ledpin = 26;
 
 
@@ -29,7 +33,8 @@ const int ledpin = 26;
 
 const float car_length = 30;
 const float car_width = 8;
-int speed = 120;
+
+int speed = 40;
 
 //-------------Spot properties----------
 
@@ -84,11 +89,13 @@ void control_type()
     {
         digitalWrite(ledpin,HIGH);
         CarMode='A';
+        setSpeed(5);
     }
     if(bt=='x')
     {
         digitalWrite(ledpin,LOW);
         CarMode='C';
+        setSpeed(40);
     }
 
     if (CarMode == 'C')
@@ -171,12 +178,15 @@ void setSpeed(int newSpeed)
     motor3.setSpeed(newSpeed);
     motor4.setSpeed(newSpeed);
 }
+
+
 void go_forward(int newSpeed)
 {
     setSpeed(newSpeed);
     forward();
     setSpeed(speed);
 }
+
 
 void go_back(int newSpeed)
 {
@@ -303,7 +313,7 @@ void scan_for_parking()
 
     else
     {
-        go_forward(50);
+        forward();
     }
 
 }
