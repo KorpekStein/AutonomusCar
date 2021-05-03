@@ -8,6 +8,7 @@
 
 const int Sensor_2_EchoPin = 23;
 const int Sensor_2_TrigPin = 22;
+
 const int Sensor_3_EchoPin = 24;
 const int Sensor_3_TrigPin = 25;
 
@@ -245,8 +246,10 @@ float GetDistance(int TrigPin, int EchoPin)
     digitalWrite(TrigPin, LOW);
     duration = pulseIn(EchoPin, HIGH);
     distance = duration * 0.034 / 2;
+
     return distance;
 }
+
 
 void parking()
 {
@@ -257,19 +260,26 @@ void parking()
 void scan_for_parking()
 {
 
-    float front_scan;
-    float back_scan;
+    float front_side_scan;
+    float back_side_scan;
 
 
     //--------------for left side-------------
 
-    front_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
-    back_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+    front_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+    back_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
 
-    /*
-    float change = front_scan - back_scan;
 
-    if (change > car_width && parking_mode==0) //szuka roznicy pomiedzy przednim i tylnim
+    float change = front_side_scan - back_side_scan;
+
+    if(parking_mode == 200)
+    {
+        Stop();
+        return;
+    }
+
+
+    if (change > car_width && parking_mode == 0) //szuka roznicy pomiedzy przednim i tylnim
     {
         digitalWrite(ledpin,LOW);
         delay(500);
@@ -289,49 +299,69 @@ void scan_for_parking()
     if (parking_mode==1 && change < 1 && front_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
 
-        digitalWrite(ledpin,LOW);
+        digitalWrite(ledpin, LOW);
         delay(500);
-        digitalWrite(ledpin,HIGH);
+        digitalWrite(ledpin, HIGH);
         delay(500);
-        digitalWrite(ledpin,LOW);
+        digitalWrite(ledpin, LOW);
         delay(500);
-        digitalWrite(ledpin,HIGH);
+        digitalWrite(ledpin, HIGH);
         delay(500);
-        digitalWrite(ledpin,LOW);
+        digitalWrite(ledpin, LOW);
         delay(500);
-        digitalWrite(ledpin,HIGH);
-
-
-        //TODO check conditions whether do park parallel or vertical
-        parallel_parking();
+        digitalWrite(ledpin, HIGH);
         parking_mode = 200;
-    }
+        return;
 
-    if(parking_mode == 200)
-    {
-        Stop();
-    }
+        /*
+            //TODO check conditions whether do park parallel or vertical
+            if(spot_width > car_length && spot_length > car_width)
+            {
+                vertical_parking();
+            }
 
-    else
-    {
-        forward();
+            if else(spot_width > car_width && spot_length > car_length)
+            {
+                parallel_parking();
+            }
+
+            else
+            {
+                parking_mode = 0;
+                return;
+            }
+
+                parking_mode = 200;
+
+        }
+
+        if(parking_mode == 200)
+        {
+            Stop();
+        }
+
+        else
+        {
+            forward();
+        }
+         */
+
     }
-     */
     forward();
-    digitalWrite(ledpin,LOW);
-    delay(500);
-    digitalWrite(ledpin,HIGH);
-    delay(500);
 
 }
+
 
 void parallel_parking()
 {
 
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
-
-
     return;
 
+}
+void vertical_parking()
+{
+
+    return;
 }
 
