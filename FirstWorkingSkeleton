@@ -3,28 +3,33 @@
 
 //----------------PINY---------------
 
-const int Sensor_1_EchoPin = 5;
-const int Sensor_1_TrigPin = 6;
-const int Sensor_2_EchoPin = 7;
-const int Sensor_2_TrigPin = 8;
-const int Sensor_3_EchoPin = 9;
-const int Sensor_3_TrigPin = 10;
+//const int Sensor_1_EchoPin = 5;
+//const int Sensor_1_TrigPin = 6;
+const int Sensor_2_EchoPin = 23;
+const int Sensor_2_TrigPin = 22;
+const int Sensor_3_EchoPin = 24;
+const int Sensor_3_TrigPin = 25;
+/*
 const int Sensor_4_EchoPin = 11;
 const int Sensor_4_TrigPin = 12;
 const int Sensor_5_EchoPin = 13;
 const int Sensor_5_TrigPin = 14;
 const int Sensor_6_EchoPin = 15;
 const int Sensor_6_TrigPin = 16;
+*/
+const int ledpin = 26;
+
+
 /*  MAP TODO MAP ALL SENSORS
  *  Sensor1 - back
- *  Sensor2 - back_right
- *  Sensor3 - front_right
+ *  Sensor2 - back_left
+ *  Sensor3 - front_left
  */
 //-----------Car_properties---------------------------
 
 const float car_length = 20;
 const float car_width = 10;
-int speed;
+int speed = 120;
 
 //-------------Spot properties----------
 
@@ -60,7 +65,7 @@ void setup()
     motor3.setSpeed(speed);
     motor4.setSpeed(speed);
     Stop();
-    //SensorsSetup();
+    SensorsSetup();
 }
 
 
@@ -87,7 +92,7 @@ void control_type()
     if (CarMode == 'C')
         control();
     else
-        park();
+        parking();
 }
 
 void control()
@@ -142,7 +147,7 @@ void left()
 }
 void right()
 {
-   motor1.run(FORWARD);
+    motor1.run(FORWARD);
     motor2.run(BACKWARD);
     motor3.run(BACKWARD);
     motor4.run(FORWARD);
@@ -195,9 +200,8 @@ void go_left(int newSpeed)
 //--------------------------------SENSORS-----------------------------------------------
 void SensorsSetup()
 {
-
-    pinMode(Sensor_1_TrigPin, OUTPUT);
-    pinMode(Sensor_1_EchoPin, INPUT);
+    //   pinMode(Sensor_1_TrigPin, OUTPUT);
+    //   pinMode(Sensor_1_EchoPin, INPUT);
 
     pinMode(Sensor_2_TrigPin, OUTPUT);
     pinMode(Sensor_2_EchoPin, INPUT);
@@ -205,6 +209,7 @@ void SensorsSetup()
     pinMode(Sensor_3_TrigPin, OUTPUT);
     pinMode(Sensor_3_EchoPin, INPUT);
 
+/*
     pinMode(Sensor_4_TrigPin, OUTPUT);
     pinMode(Sensor_4_EchoPin, INPUT);
 
@@ -214,6 +219,7 @@ void SensorsSetup()
     pinMode(Sensor_6_TrigPin, OUTPUT);
     pinMode(Sensor_6_EchoPin, INPUT);
 
+*/
 
 }
 float GetDistance(int TrigPin, int EchoPin)
@@ -230,9 +236,9 @@ float GetDistance(int TrigPin, int EchoPin)
     return distance;
 }
 
-void park()
+void parking()
 {
-    return;
+    digitalWrite(ledpin,HIGH);
     //TODO implement parking scan
 }
 
@@ -257,8 +263,9 @@ void scan_for_parking()
         //TODO start clock so we can measure spot length
     }
 
-    if (parking_mode==1 && change < 1) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
+    if (parking_mode==1 && change < 1 && front_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
+
         //TODO check conditions whether do park parallel or vertical
         parallel_parking();
         parking_mode = 200;
@@ -273,7 +280,9 @@ void scan_for_parking()
 
 void parallel_parking()
 {
- //Funkcje do parkowania uzaleznione od wymiarow (formulka)
+
+    //Funkcje do parkowania uzaleznione od wymiarow (formulka)
+
     return;
 
 }
