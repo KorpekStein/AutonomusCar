@@ -34,7 +34,7 @@ const int ledpin = 26;
 const float car_length = 30;
 const float car_width = 8;
 
-int speed = 40;
+int speed = 100;
 
 //-------------Spot properties----------
 
@@ -89,13 +89,13 @@ void control_type()
     {
         digitalWrite(ledpin,HIGH);
         CarMode='A';
-        setSpeed(5);
+        setSpeed(70);
     }
     if(bt=='x')
     {
         digitalWrite(ledpin,LOW);
         CarMode='C';
-        setSpeed(40);
+        setSpeed(speed);
     }
 
     if (CarMode == 'C')
@@ -266,6 +266,7 @@ void scan_for_parking()
     front_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
     back_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
 
+    /*
     float change = front_scan - back_scan;
 
     if (change > car_width && parking_mode==0) //szuka roznicy pomiedzy przednim i tylnim
@@ -315,6 +316,12 @@ void scan_for_parking()
     {
         forward();
     }
+     */
+    forward();
+    digitalWrite(ledpin,LOW);
+    delay(500);
+    digitalWrite(ledpin,HIGH);
+    delay(500);
 
 }
 
@@ -322,6 +329,7 @@ void parallel_parking()
 {
 
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
+
 
     return;
 
