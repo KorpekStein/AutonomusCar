@@ -281,13 +281,7 @@ void scan_for_parking()
 
     if (change > car_width && parking_mode == 0) //szuka roznicy pomiedzy przednim i tylnim
     {
-        digitalWrite(ledpin,LOW);
-        delay(500);
-        digitalWrite(ledpin,HIGH);
-        delay(500);
-        digitalWrite(ledpin,LOW);
-        delay(500);
-        digitalWrite(ledpin,HIGH);
+        blink(2);
 
         spot_width = change;
         parking_mode = 1;
@@ -296,20 +290,10 @@ void scan_for_parking()
 
     }
 
-    if (parking_mode==1 && change < 1 && front_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
+    if (parking_mode==1 && change < 2 && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
 
-        digitalWrite(ledpin, LOW);
-        delay(500);
-        digitalWrite(ledpin, HIGH);
-        delay(500);
-        digitalWrite(ledpin, LOW);
-        delay(500);
-        digitalWrite(ledpin, HIGH);
-        delay(500);
-        digitalWrite(ledpin, LOW);
-        delay(500);
-        digitalWrite(ledpin, HIGH);
+        blink(3);
         parking_mode = 200;
         return;
 
@@ -335,20 +319,14 @@ void scan_for_parking()
 
         }
 
-        if(parking_mode == 200)
-        {
-            Stop();
-        }
 
-        else
-        {
-            forward();
-        }
          */
 
     }
-    forward();
-
+    else
+    {
+        forward();
+    }
 }
 
 
@@ -363,5 +341,15 @@ void vertical_parking()
 {
 
     return;
+}
+void blink(int n)
+{
+  for(int i =0;i<n;i++)
+  {
+      digitalWrite(ledpin, LOW);
+      delay(500);
+      digitalWrite(ledpin, HIGH);
+      delay(500);
+  }
 }
 
