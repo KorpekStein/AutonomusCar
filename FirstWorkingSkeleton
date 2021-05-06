@@ -1,5 +1,5 @@
 #include <AFMotor.h>
-#include <Timers.h>
+
 
 //----------------PINY---------------
 
@@ -89,25 +89,33 @@ void loop()
 }
 
 //-----------------------CONTROLING-------------------------
+
+
 void control_type()
 {
     if(bt=='X')
     {
-        digitalWrite(ledpin,HIGH);
+        Stop();
         CarMode='A';
 
     }
+
     if(bt=='x')
     {
-        digitalWrite(ledpin,LOW);
+        Stop();
         CarMode='C';
 
     }
 
     if (CarMode == 'C')
+    {
         control();
-    else
+    }
+
+    if (CarMode == 'A')
+    {
         parking();
+    }
 }
 
 void control()
@@ -332,6 +340,7 @@ void scan_for_parking()
     else
     {
         forward();
+
     }
 }
 

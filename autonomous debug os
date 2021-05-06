@@ -66,18 +66,15 @@ void setup()
 {
     Serial.begin(9600);
 
-    motor1.setSpeed(speed);
-    motor2.setSpeed(speed);
-    motor3.setSpeed(speed);
-    motor4.setSpeed(speed);
-    Stop();
+    MotorsSetup();
     SensorsSetup();
+    Serial.print("Setup finished correctly\n");
 }
 
 
 void loop()
 {
-
+    Serial.print("Loop begin: \n");
     parking();
 
 }
@@ -165,6 +162,8 @@ void go_left(int newSpeed)
 //--------------------------------SENSORS-----------------------------------------------
 void SensorsSetup()
 {
+    Serial.print("sensors Setup initiated\n");
+
     //   pinMode(Sensor_1_TrigPin, OUTPUT);
     //   pinMode(Sensor_1_EchoPin, INPUT);
 
@@ -185,8 +184,19 @@ void SensorsSetup()
     pinMode(Sensor_6_EchoPin, INPUT);
 
 */
-
+    Serial.print("sensors Setup finished\n");
 }
+void MotorsSetup()
+{
+    Serial.print("Motors Setup initiated\n");
+    motor1.setSpeed(speed);
+    motor2.setSpeed(speed);
+    motor3.setSpeed(speed);
+    motor4.setSpeed(speed);
+    Stop();
+    Serial.print("Motors Setup finished\n");
+}
+
 float GetDistance(int TrigPin, int EchoPin)
 {
     float distance,duration;
@@ -224,8 +234,16 @@ void scan_for_parking()
 
     float change = front_side_scan - back_side_scan;
 
+    Serial.print("Front side scan: ");
+    Serial.print(front_side_scan);
+    Serial.print("back side scan: ");
+    Serial.print(back_side_scan);
+    Serial.print("change: ");
+    Serial.print(change);
+
     if(parking_mode == 200)
     {
+        Serial.print("Parking stage finished\n");
         Stop();
         return;
     }
@@ -233,9 +251,13 @@ void scan_for_parking()
 
     if (change > car_width && parking_mode == 0) //szuka roznicy pomiedzy przednim i tylnim
     {
+
+        Serial.print("The beggining of spot found\n");
         blink(2);
 
         spot_width = change;
+        Serial.print("spot width: ");
+        Serial.print(spot_width);
         parking_mode = 1;
         //TODO start clock so we can measure spot length
 
@@ -244,6 +266,7 @@ void scan_for_parking()
 
     if (parking_mode==1 && change < 2 && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
+        Serial.print("The end of spot found\n");
 
         blink(3);
         parking_mode = 200;
@@ -277,7 +300,9 @@ void scan_for_parking()
     }
     else
     {
+        Serial.print("Still looking\n");
         forward();
+        delay
     }
 }
 
@@ -296,6 +321,7 @@ void vertical_parking()
 }
 void blink(int n)
 {
+    Serial.print("BLINKING ************************************\n");
   for(int i =0;i<n;i++)
   {
       digitalWrite(ledpin, LOW);
