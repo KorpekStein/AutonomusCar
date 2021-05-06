@@ -297,14 +297,15 @@ void scan_for_parking()
     {
         blink(2);
 
-        spot_width = change;
+        spot_length = change;
         parking_mode = 1;
         //TODO start clock so we can measure spot length
 
 
     }
 
-    if (parking_mode==1 && change < 5 && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
+
+    if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
 
         blink(3);
@@ -313,12 +314,12 @@ void scan_for_parking()
 
         /*
             //TODO check conditions whether do park parallel or vertical
-            if(spot_width > car_length && spot_length > car_width)
+            if(spot_length > car_length && spot_width > car_width)
             {
                 vertical_parking();
             }
 
-            if else(spot_width > car_width && spot_length > car_length)
+            if else(spot_length > car_width && spot_width > car_length)
             {
                 parallel_parking();
             }
@@ -347,16 +348,16 @@ void scan_for_parking()
 
 void parallel_parking()
 {
-
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
     return;
 
 }
+
 void vertical_parking()
 {
-
     return;
 }
+
 void blink(int n)
 {
   for(int i=0;i<n;i++)
