@@ -35,7 +35,7 @@ const int ledpin = 26;
 const float car_length = 30;
 const float car_width = 8;
 
-int speed = 100;
+int speed = 50;
 
 //-------------Spot properties----------
 
@@ -78,61 +78,13 @@ void setup()
 void loop()
 {
 
-    bt=Serial.read();
-    control_type();
+    parking();
 
 }
 
 //-----------------------CONTROLING-------------------------
-void control_type()
-{
-    if(bt=='X')
-    {
-        digitalWrite(ledpin,HIGH);
-        CarMode='A';
-        setSpeed(70);
-    }
-    if(bt=='x')
-    {
-        digitalWrite(ledpin,LOW);
-        CarMode='C';
-        setSpeed(speed);
-    }
 
-    if (CarMode == 'C')
-        control();
-    else
-        parking();
-}
 
-void control()
-{
-    if(bt=='F')
-    {
-        forward();
-    }
-
-    if(bt=='B')
-    {
-        backward();
-    }
-
-    if(bt=='L')
-    {
-        left();
-    }
-
-    if(bt=='R')
-    {
-        right();
-    }
-
-    if(bt=='S')
-    {
-        Stop();
-    }
-
-}
 void forward()
 {
     motor1.run(FORWARD);
@@ -290,7 +242,7 @@ void scan_for_parking()
 
     }
 
-    if (parking_mode==1 && change < 5 && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
+    if (parking_mode==1 && change < 2 && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
 
         blink(3);
