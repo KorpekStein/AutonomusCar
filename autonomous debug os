@@ -52,8 +52,8 @@ AF_DCMotor motor4(4); //left front motor
 
 //--------------------------------------
 
-char CarMode = 'C'; // C for control mode, A for parking
-char bt='S';
+
+
 //-------------EXTREMALY IMPORTANT-----------------
 int parking_mode = 0; //TODO describe every scenario with appropriate number
 /* 0 - no spot found, keep looking
@@ -253,7 +253,7 @@ void scan_for_parking()
     {
 
         Serial.print("The beggining of spot found\n");
-        blink(2);
+
 
         spot_width = change;
         Serial.print("spot width: ");
@@ -264,11 +264,11 @@ void scan_for_parking()
 
     }
 
-    if (parking_mode==1 && change < 2 && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
+    if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
         Serial.print("The end of spot found\n");
 
-        blink(3);
+
         parking_mode = 200;
         return;
 
@@ -318,16 +318,5 @@ void vertical_parking()
 {
 
     return;
-}
-void blink(int n)
-{
-    Serial.print("BLINKING ************************************\n");
-  for(int i =0;i<n;i++)
-  {
-      digitalWrite(ledpin, LOW);
-      delay(500);
-      digitalWrite(ledpin, HIGH);
-      delay(500);
-  }
 }
 
