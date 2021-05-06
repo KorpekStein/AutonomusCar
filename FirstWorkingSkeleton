@@ -1,7 +1,9 @@
 #include <AFMotor.h>
-
+#include <Timers.h>
 
 //----------------PINY---------------
+
+
 
 //const int Sensor_1_EchoPin = 5;
 //const int Sensor_1_TrigPin = 6;
@@ -25,6 +27,7 @@ const int Sensor_6_TrigPin = 16;
 const int ledpin = 26;
 
 
+
 /*  MAP TODO MAP ALL SENSORS
  *  Sensor1 - back
  *  Sensor2 - back_left
@@ -35,7 +38,7 @@ const int ledpin = 26;
 const float car_length = 30;
 const float car_width = 8;
 
-int speed = 100;
+int speed = 80;
 
 //-------------Spot properties----------
 
@@ -54,8 +57,10 @@ AF_DCMotor motor4(4); //left front motor
 
 char CarMode = 'C'; // C for control mode, A for parking
 char bt='S';
+
 //-------------EXTREMALY IMPORTANT-----------------
 int parking_mode = 0; //TODO describe every scenario with appropriate number
+
 /* 0 - no spot found, keep looking
  * 1 - spot found, looking for end
  * 2 - end found, started parking protocol
@@ -90,13 +95,13 @@ void control_type()
     {
         digitalWrite(ledpin,HIGH);
         CarMode='A';
-        setSpeed(70);
+
     }
     if(bt=='x')
     {
         digitalWrite(ledpin,LOW);
         CarMode='C';
-        setSpeed(speed);
+
     }
 
     if (CarMode == 'C')
@@ -275,6 +280,7 @@ void scan_for_parking()
     if(parking_mode == 200)
     {
         Stop();
+        blink(1);
         return;
     }
 
@@ -344,7 +350,7 @@ void vertical_parking()
 }
 void blink(int n)
 {
-  for(int i =0;i<n;i++)
+  for(int i=0;i<n;i++)
   {
       digitalWrite(ledpin, LOW);
       delay(500);
