@@ -279,8 +279,8 @@ void scan_for_parking()
 
     //--------------for left side-------------
 
-    front_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
-    back_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+    back_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+    front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
 
 
     float change = front_side_scan - back_side_scan;
