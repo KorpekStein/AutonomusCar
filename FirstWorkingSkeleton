@@ -350,9 +350,11 @@ void parallel_parking()
 {
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
     go_back(120);
+    delay(200);
     Stop();
     delay(500);
     go_right(150);
+    delay(200);
     Robot_Stop();
     delay(500);
 
