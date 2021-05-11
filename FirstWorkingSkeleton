@@ -36,7 +36,7 @@ const int ledpin = 26;
 //-----------Car_properties---------------------------
 
 const float car_length = 30;
-const float car_width = 8;
+const float car_width = 15;
 
 int speed = 100;
 
@@ -307,7 +307,7 @@ void scan_for_parking()
 
     if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
-
+        blink(5);
         parallel_parking();
         //parking_mode = 200;
         return;
@@ -407,5 +407,6 @@ void blink(int n)
         delay(500);
         digitalWrite(ledpin, HIGH);
         delay(500);
+        digitalWrite(ledpin, LOW);
     }
 }
