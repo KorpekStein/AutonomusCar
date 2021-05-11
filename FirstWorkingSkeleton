@@ -38,7 +38,7 @@ const int ledpin = 26;
 const float car_length = 30;
 const float car_width = 8;
 
-int speed = 70;
+int speed = 100;
 
 //-------------Spot properties----------
 
@@ -308,8 +308,8 @@ void scan_for_parking()
     if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
 
-
-        parking_mode = 200;
+        parallel_parking();
+        //parking_mode = 200;
         return;
 
         /*
@@ -349,6 +349,13 @@ void scan_for_parking()
 void parallel_parking()
 {
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
+    go_back(120);
+    Stop();
+    delay(500);
+    go_right(150);
+    Robot_Stop();
+    delay(500);
+    parking_mode = 200;
     return;
 
 }
