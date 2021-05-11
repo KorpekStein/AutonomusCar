@@ -36,7 +36,7 @@ const int ledpin = 26;
 //-----------Car_properties---------------------------
 
 const float car_length = 30;
-const float car_width = 15;
+const float car_width = 10;
 
 int speed = 100;
 
@@ -372,8 +372,9 @@ void parallel_parking()
 
     for(;;)
     {
+        go_back(100);
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan >6 && back_scan <13) break;
+        if(back_scan >3 && back_scan <13) break;
     }
 
     /*
