@@ -370,11 +370,14 @@ void parallel_parking()
 
     float back_scan;
 
+
+
+
     for(;;)
     {
         go_back(100);
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan >3 && back_scan <25) break;
+        if(back_scan >10 && back_scan <25) break;
     }
 
     /*
