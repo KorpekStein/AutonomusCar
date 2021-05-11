@@ -349,26 +349,42 @@ void scan_for_parking()
 void parallel_parking()
 {
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
-    go_back(120);
-    delay(200);
+
+    float front_side_scan;
+    for(;;)
+    {
+        go_back(100);
+        front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+        if(front_side_scan > spot_length) break;
+    }
     Stop();
-    delay(500);
+    delay(1000);
     go_right(150);
     delay(200);
-    Robot_Stop();
+    Stop();
     delay(500);
 
 
 
     float back_scan;
 
-    do
+    for(;;)
     {
-        back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin)
+        back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
+        if(back_scan >6 && back_scan <13) break;
+    }
+
+    /*
+     do
+    {
+        back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
         go_back(100);
 
     } while(!(back_scan > 6 && back_scan <13));
+    */
+
     Stop();
+    delay(1000);
     go_left(150);
     Stop();
 
