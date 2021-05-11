@@ -5,8 +5,8 @@
 
 
 
-//const int Sensor_1_EchoPin = 5;
-//const int Sensor_1_TrigPin = 6;
+const int Sensor_1_EchoPin = 53;
+const int Sensor_1_TrigPin = 52;
 
 const int Sensor_2_EchoPin = 23;
 const int Sensor_2_TrigPin = 22;
@@ -355,6 +355,22 @@ void parallel_parking()
     go_right(150);
     Robot_Stop();
     delay(500);
+
+
+
+    float back_scan;
+
+    do
+    {
+        back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin)
+        go_back(100);
+
+    } while(!(back_scan > 6 && back_scan <13));
+    Stop();
+    go_left(150);
+    Stop();
+
+
     parking_mode = 200;
     return;
 
