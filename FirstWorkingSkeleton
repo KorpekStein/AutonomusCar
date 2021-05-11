@@ -38,7 +38,7 @@ const int ledpin = 26;
 const float car_length = 30;
 const float car_width = 8;
 
-int speed = 40;
+int speed = 70;
 
 //-------------Spot properties----------
 
@@ -218,7 +218,7 @@ void go_right(int newSpeed)
 
 void go_left(int newSpeed)
 {
-    setSpeed(newSpeed);,
+    setSpeed(newSpeed);
     left();
 
 }
@@ -360,19 +360,11 @@ void vertical_parking()
 
 void blink(int n)
 {
-  for(int i=0;i<n;i++)
-  {
-      digitalWrite(ledpin, LOW);
-      delay(500);
-      digitalWrite(ledpin, HIGH);
-      delay(500);
-  }
+    for(int i=0;i<n;i++)
+    {
+        digitalWrite(ledpin, LOW);
+        delay(500);
+        digitalWrite(ledpin, HIGH);
+        delay(500);
+    }
 }
-/* MRUGANIE MODE SCRIPT
- *
- *
- *
- *
- *
- * /
-
