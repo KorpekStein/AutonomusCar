@@ -3,8 +3,6 @@
 
 //----------------PINY---------------
 
-
-
 //const int Sensor_1_EchoPin = 5;
 //const int Sensor_1_TrigPin = 6;
 
@@ -27,7 +25,6 @@ const int Sensor_6_TrigPin = 16;
 const int ledpin = 26;
 
 
-
 /*  MAP TODO MAP ALL SENSORS
  *  Sensor1 - back
  *  Sensor2 - back_left
@@ -38,7 +35,7 @@ const int ledpin = 26;
 const float car_length = 30;
 const float car_width = 8;
 
-int speed = 70;
+int speed = 50;
 
 //-------------Spot properties----------
 
@@ -55,12 +52,10 @@ AF_DCMotor motor4(4); //left front motor
 
 //--------------------------------------
 
-char CarMode = 'C'; // C for control mode, A for parking
-char bt='S';
 
-//-------------EXTREMELY IMPORTANT-----------------
+
+//-------------EXTREMALY IMPORTANT-----------------
 int parking_mode = 0; //TODO describe every scenario with appropriate number
-
 /* 0 - no spot found, keep looking
  * 1 - spot found, looking for end
  * 2 - end found, started parking protocol
@@ -71,81 +66,22 @@ void setup()
 {
     Serial.begin(9600);
 
-    motor1.setSpeed(speed);
-    motor2.setSpeed(speed);
-    motor3.setSpeed(speed);
-    motor4.setSpeed(speed);
-    Stop();
+    MotorsSetup();
     SensorsSetup();
+    Serial.print("Setup finished correctly\n");
 }
 
 
 void loop()
 {
-
-    bt=Serial.read();
-    control_type();
-
-}
-
-//-----------------------CONTROLLING-------------------------
-
-
-void control_type()
-{
-    if(bt=='X')
-    {
-        Stop();
-        CarMode='A';
-
-    }
-
-    if(bt=='x')
-    {
-        Stop();
-        CarMode='C';
-
-    }
-
-    if (CarMode == 'C')
-    {
-        control();
-    }
-
-    if (CarMode == 'A')
-    {
-        parking();
-    }
-}
-
-void control()
-{
-    if(bt=='F')
-    {
-        forward();
-    }
-
-    if(bt=='B')
-    {
-        backward();
-    }
-
-    if(bt=='L')
-    {
-        left();
-    }
-
-    if(bt=='R')
-    {
-        right();
-    }
-
-    if(bt=='S')
-    {
-        Stop();
-    }
+    Serial.print("Loop begin: \n");
+    parking();
 
 }
+
+//-----------------------CONTROLING-------------------------
+
+
 void forward()
 {
     motor1.run(FORWARD);
@@ -226,6 +162,8 @@ void go_left(int newSpeed)
 //--------------------------------SENSORS-----------------------------------------------
 void SensorsSetup()
 {
+    Serial.print("sensors Setup initiated\n");
+
     //   pinMode(Sensor_1_TrigPin, OUTPUT);
     //   pinMode(Sensor_1_EchoPin, INPUT);
 
@@ -246,8 +184,19 @@ void SensorsSetup()
     pinMode(Sensor_6_EchoPin, INPUT);
 
 */
-
+    Serial.print("sensors Setup finished\n");
 }
+void MotorsSetup()
+{
+    Serial.print("Motors Setup initiated\n");
+    motor1.setSpeed(speed);
+    motor2.setSpeed(speed);
+    motor3.setSpeed(speed);
+    motor4.setSpeed(speed);
+    Stop();
+    Serial.print("Motors Setup finished\n");
+}
+
 float GetDistance(int TrigPin, int EchoPin)
 {
     float distance,duration;
@@ -279,34 +228,45 @@ void scan_for_parking()
 
     //--------------for left side-------------
 
-    back_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
-    front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+    front_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+    back_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
 
 
     float change = front_side_scan - back_side_scan;
 
+    Serial.print("Front side scan: ");
+    Serial.print(front_side_scan);
+    Serial.print("back side scan: ");
+    Serial.print(back_side_scan);
+    Serial.print("change: ");
+    Serial.print(change);
+
     if(parking_mode == 200)
     {
-        blink(1);
+        Serial.print("Parking stage finished\n");
         Stop();
-
         return;
     }
 
 
     if (change > car_width && parking_mode == 0) //szuka roznicy pomiedzy przednim i tylnim
     {
-        digitalWrite(ledpin, HIGH);
-        spot_length = change;
+
+        Serial.print("The beggining of spot found\n");
+
+
+        spot_width = change;
+        Serial.print("spot width: ");
+        Serial.print(spot_width);
         parking_mode = 1;
         //TODO start clock so we can measure spot length
 
 
     }
 
-
     if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
+        Serial.print("The end of spot found\n");
 
 
         parking_mode = 200;
@@ -314,12 +274,12 @@ void scan_for_parking()
 
         /*
             //TODO check conditions whether do park parallel or vertical
-            if(spot_length > car_length && spot_width > car_width)
+            if(spot_width > car_length && spot_length > car_width)
             {
                 vertical_parking();
             }
 
-            if else(spot_length > car_width && spot_width > car_length)
+            if else(spot_width > car_width && spot_length > car_length)
             {
                 parallel_parking();
             }
@@ -340,31 +300,23 @@ void scan_for_parking()
     }
     else
     {
+        Serial.print("Still looking\n");
         forward();
-
+        delay
     }
 }
 
 
 void parallel_parking()
 {
+
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
     return;
 
 }
-
 void vertical_parking()
 {
+
     return;
 }
 
-void blink(int n)
-{
-    for(int i=0;i<n;i++)
-    {
-        digitalWrite(ledpin, LOW);
-        delay(500);
-        digitalWrite(ledpin, HIGH);
-        delay(500);
-    }
-}
