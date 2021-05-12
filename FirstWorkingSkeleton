@@ -312,8 +312,8 @@ void scan_for_parking()
         Stop();
         blink(5);
         delay(2000);
-        parallel_parking();
-        //vertical_parking();
+        //parallel_parking();
+        vertical_parking();
         parking_mode = 200;
         return;
 
@@ -379,7 +379,7 @@ void parallel_parking()
     for(;;)
     {
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <15) break; //TO NIE DZIAALA
+        if(back_scan <4) break; //TO NIE DZIAALA
         go_back(100);
     }
 
@@ -416,7 +416,7 @@ void vertical_parking()
     Stop();
     delay(1000);
     go_right(150);
-    delay(600);
+    delay(500);
     Stop();
     delay(500);
 
@@ -431,13 +431,13 @@ void vertical_parking()
     {
         go_back(100);
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <10) break; //TO NIE DZIAALA
+        if(back_scan <4) break; //TO NIE DZIAALA
     }
 
 
     Stop();
     delay(1000);
-    Stop();
+
 
 
     parking_mode = 200;
