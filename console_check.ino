@@ -228,8 +228,8 @@ void go_left(int newSpeed)
 //--------------------------------SENSORS-----------------------------------------------
 void SensorsSetup()
 {
-    //   pinMode(Sensor_1_TrigPin, OUTPUT);
-    //   pinMode(Sensor_1_EchoPin, INPUT);
+    pinMode(Sensor_1_TrigPin, OUTPUT);
+    pinMode(Sensor_1_EchoPin, INPUT);
 
     pinMode(Sensor_2_TrigPin, OUTPUT);
     pinMode(Sensor_2_EchoPin, INPUT);
