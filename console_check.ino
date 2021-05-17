@@ -448,7 +448,7 @@ void vertical_parking()
     {
         go_back(100);
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <4) break; //TO NIE DZIAALA
+        if(back_scan <8) break; //TO NIE DZIAALA ?
         Serial.print("back scan\n");
         Serial.print(back_scan);
     }
