@@ -287,6 +287,20 @@ void scan_for_parking()
 
     float change = front_side_scan - back_side_scan;
 
+    Serial.printf("back_side_scan: ");
+    Serial.printf(back_side_scan);
+    Serial.printf("\n");
+    Serial.printf("front_side_scan:");
+    Serial.printf(front_side_scan);
+    Serial.printf("\n");
+    Serial.printf("change:");
+    Serial.printf(change);
+    Serial.printf("\n");
+    Serial.printf("praking mode:");
+    Serial.printf(parking_mode);
+    Serial.printf("\n");
+
+
     if(parking_mode == 200)
     {
         blink(1);
@@ -304,19 +318,9 @@ void scan_for_parking()
         spot_length = change;
         parking_mode = 1;
         //TODO start clock so we can measure spot length
+        Serial.printf("First condition fillfulled\n");
 
-        Serial.printf("back_side_scan:\n");
-        Serial.printf("\n");
-        Serial.printf(back_side_scan);
-        Serial.printf("front_side_scan:\n");
-        Serial.printf("\n");
-        Serial.printf(front_side_scan);
-        Serial.printf("change:\n");
-        Serial.printf("\n");
-        Serial.printf(change);
-        Serial.printf("praking mode:\n");
-        Serial.printf("\n");
-        Serial.printf(parking_mode);
+
     }
 
 
@@ -325,8 +329,9 @@ void scan_for_parking()
         Stop();
         blink(5);
         delay(2000);
-        //parallel_parking();
-        vertical_parking();
+        Serial.printf("parking..............\n");
+        parallel_parking();
+        //vertical_parking();
         parking_mode = 200;
         return;
 
@@ -374,10 +379,11 @@ void parallel_parking()
         go_back(100);
         front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
         if(front_side_scan > spot_length) break;
-        Serial.printf("front scan\n");
-        Serial.printf("\n");
+        Serial.printf("front scan: ");
         Serial.printf(front_side_scan);
+        Serial.printf("\n");
     }
+
     Stop();
     delay(1000);
     go_right(150);
@@ -397,9 +403,9 @@ void parallel_parking()
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
         if(back_scan <4) break; //TO NIE DZIAALA
         go_back(100);
-        Serial.printf("back scan\n");
-        Serial.printf("\n");
+        Serial.printf("back scan: ");
         Serial.printf(back_scan);
+        Serial.printf("\n");
     }
 
     /*
