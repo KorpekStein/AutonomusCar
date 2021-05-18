@@ -1,5 +1,5 @@
 #include <AFMotor.h>
-
+#include <time.h>
 
 //----------------PINY---------------
 
@@ -7,21 +7,19 @@
 
 const int Sensor_1_EchoPin = 53;
 const int Sensor_1_TrigPin = 52;
-
 const int Sensor_2_EchoPin = 23;
 const int Sensor_2_TrigPin = 22;
-
 const int Sensor_3_EchoPin = 24;
 const int Sensor_3_TrigPin = 25;
-
-/*
 const int Sensor_4_EchoPin = 11;
 const int Sensor_4_TrigPin = 12;
 const int Sensor_5_EchoPin = 13;
 const int Sensor_5_TrigPin = 14;
 const int Sensor_6_EchoPin = 15;
 const int Sensor_6_TrigPin = 16;
-*/
+
+const int Speed_Sensor = 30;
+
 
 //SPEED MIARA PIN
 //const int steperpin = 15;
@@ -40,9 +38,18 @@ const int ledpin = 26;
 
 const float car_length = 30;
 const float car_width = 20;
+double tire_circumference; //ADDDDDDDD
 
 int speed = 100;
+int ms_speed;
+//---------------usefull values------------
 
+long time_1;
+long time_2;
+long time_change;
+
+long steps = 0;
+int rps;
 //-------------Spot properties----------
 
 float spot_length;
@@ -74,11 +81,9 @@ void setup()
 {
     Serial.begin(9600);
 
-    motor1.setSpeed(speed);
-    motor2.setSpeed(speed);
-    motor3.setSpeed(speed);
-    motor4.setSpeed(speed);
-    Stop();
+
+
+    MotorsSetup();
     SensorsSetup();
 }
 
@@ -101,7 +106,6 @@ void control_type()
         Stop();
         CarMode='A';
         parking_mode = 0;
-
 
     }
 
@@ -150,6 +154,15 @@ void control()
         Stop();
     }
 
+}
+//----------------MOTORS--------------
+void MotorsSetup()
+{
+    motor1.setSpeed(speed);
+    motor2.setSpeed(speed);
+    motor3.setSpeed(speed);
+    motor4.setSpeed(speed);
+    Stop();
 }
 void forward()
 {
@@ -240,7 +253,7 @@ void SensorsSetup()
     pinMode(Sensor_3_TrigPin, OUTPUT);
     pinMode(Sensor_3_EchoPin, INPUT);
 
-/*
+
     pinMode(Sensor_4_TrigPin, OUTPUT);
     pinMode(Sensor_4_EchoPin, INPUT);
 
@@ -250,10 +263,7 @@ void SensorsSetup()
     pinMode(Sensor_6_TrigPin, OUTPUT);
     pinMode(Sensor_6_EchoPin, INPUT);
 
-
-
-*/
-   // pinMode(steperpin, INPUT);
+    pinMode(Speed_Sensor, INPUT_PULLUP);
 
 }
 float GetDistance(int TrigPin, int EchoPin)
@@ -281,6 +291,15 @@ void parking()
 void scan_for_parking()
 {
 
+
+
+
+    if(digitalRead(Speed_Sensor))
+    {
+        steps++;
+        while(digitalRead(Speed_Sensor));
+    }
+
     float front_side_scan;
     float back_side_scan;
 
@@ -304,9 +323,16 @@ void scan_for_parking()
 
     if (change > car_width && parking_mode == 0) //szuka roznicy pomiedzy przednim i tylnim
     {
+
+
+        time_1 = millis();
+        steps = 0;
+
+
         digitalWrite(ledpin, HIGH);
         spot_length = change;
         parking_mode = 1;
+
         //TODO start clock so we can measure spot length
 
 
@@ -316,6 +342,16 @@ void scan_for_parking()
     if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
         Stop();
+
+        time_2 = millis();
+        time_change = time_2-time_1;
+
+        rps = (steps/20)/time_change;
+        ms_speed = rps*100*tire_circumference;
+
+        spot_width = steps/20*tire_circumference;
+
+
         blink(5);
         delay(2000);
         //parallel_parking();
@@ -352,6 +388,7 @@ void scan_for_parking()
     else
     {
         forward();
+
 
     }
 }
