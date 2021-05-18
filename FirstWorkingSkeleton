@@ -23,6 +23,9 @@ const int Sensor_6_EchoPin = 15;
 const int Sensor_6_TrigPin = 16;
 */
 
+//SPEED MIARA PIN
+//const int steperpin = 15;
+
 
 const int ledpin = 26;
 
@@ -228,8 +231,8 @@ void go_left(int newSpeed)
 //--------------------------------SENSORS-----------------------------------------------
 void SensorsSetup()
 {
-    //   pinMode(Sensor_1_TrigPin, OUTPUT);
-    //   pinMode(Sensor_1_EchoPin, INPUT);
+    pinMode(Sensor_1_TrigPin, OUTPUT);
+    pinMode(Sensor_1_EchoPin, INPUT);
 
     pinMode(Sensor_2_TrigPin, OUTPUT);
     pinMode(Sensor_2_EchoPin, INPUT);
@@ -247,7 +250,10 @@ void SensorsSetup()
     pinMode(Sensor_6_TrigPin, OUTPUT);
     pinMode(Sensor_6_EchoPin, INPUT);
 
+
+
 */
+   // pinMode(steperpin, INPUT);
 
 }
 float GetDistance(int TrigPin, int EchoPin)
