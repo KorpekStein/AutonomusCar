@@ -1,5 +1,6 @@
 #include <AFMotor.h>
 #include <Stepper.h>
+#include <math.h>
 
 
 //----------------PINY---------------
@@ -39,7 +40,7 @@ const int ledpin = 26;
 
 const float car_length = 30;
 const float car_width = 20;
-double tire_circumference; //ADDDDDDDD
+double tire_circumference = 49.5*3.14159265359; //in cm
 
 int speed = 100;
 int ms_speed;
@@ -56,6 +57,7 @@ int rps;
 float spot_length;
 float spot_width;
 
+float spot_width_coeficient;
 //---------------------------------
 
 AF_DCMotor motor1(1); //left back motor
@@ -327,7 +329,7 @@ void scan_for_parking()
 
         //now whether we want car write n cm we need to: ride() delay(n second)
 
-        spot_width = steps/20*tire_circumference;
+        spot_width = steps/20*tire_circumference - car_length;
 
 
         blink(5);
@@ -341,7 +343,7 @@ void scan_for_parking()
                 vertical_parking();
             }
 
-            if else(spot_length > car_width && spot_width > car_length)
+            if else(spot_length > car_width && spot_width*spot_width_coeficient > car_length)
             {
                 parallel_parking();
             }
@@ -349,6 +351,9 @@ void scan_for_parking()
             else
             {
                 parking_mode = 0;
+                spot_width = 0;
+                spot_length = 0;
+
                 return;
             }
 
@@ -400,7 +405,7 @@ void parallel_parking()
     for(;;)
     {
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <4) break; //TO NIE DZIAALA
+        if(back_scan <8) break; //TO NIE DZIAALA
         backward();
     }
 
@@ -445,7 +450,7 @@ void vertical_parking()
     {
         backward();
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <4) break; //TO NIE DZIAALA
+        if(back_scan <8) break; //TO NIE DZIAALA
     }
 
 
