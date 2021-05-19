@@ -290,13 +290,14 @@ void scan_for_parking()
     Serial.print("front_side_scan:");
     Serial.print(front_side_scan);
     Serial.print("\n");
+    /*
     Serial.print("change:");
     Serial.print(change);
     Serial.print("\n");
     Serial.print("praking mode:");
     Serial.print(parking_mode);
     Serial.print("\n");
-
+*/
 
     if(parking_mode == 200)
     {
@@ -315,7 +316,7 @@ void scan_for_parking()
         spot_length = change;
         parking_mode = 1;
         //TODO start clock so we can measure spot length
-        Serial.print("First condition fillfulled\n");
+        Serial.print("First condition fillfulled\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
     }
@@ -326,9 +327,9 @@ void scan_for_parking()
         Stop();
         blink(5);
         delay(2000);
-        Serial.print("parking..............\n");
-        parallel_parking();
-        //vertical_parking();
+        Serial.print("Second condition fillfulled\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        //parallel_parking();
+        vertical_parking();
         parking_mode = 200;
         return;
 
@@ -392,7 +393,7 @@ void parallel_parking()
     for(;;)
     {
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <4) break; //TO NIE DZIAALA
+        if(back_scan <8) break;
         go_back(100);
         Serial.print("back scan: ");
         Serial.print(back_scan);
@@ -427,8 +428,9 @@ void vertical_parking()
         go_back(100);
         front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
         if(front_side_scan > spot_length) break;
-        Serial.print("front scan\n");
+        Serial.print("front scan: ");
         Serial.print(front_side_scan);
+        Serial.print("\n");
     }
     Stop();
     delay(1000);
@@ -449,8 +451,9 @@ void vertical_parking()
         go_back(100);
         back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
         if(back_scan <8) break; //TO NIE DZIAALA ?
-        Serial.print("back scan\n");
+        Serial.print("back scan: ");
         Serial.print(back_scan);
+        Serial.print("\n");
     }
 
 
