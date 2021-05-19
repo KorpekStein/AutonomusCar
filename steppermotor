@@ -82,8 +82,6 @@ void setup()
 {
     Serial.begin(9600);
 
-
-
     MotorsSetup();
     SensorsSetup();
 }
@@ -184,14 +182,17 @@ void backward()
     motor3.run(BACKWARD);
     motor4.run(BACKWARD);
 }
+
 void left()
 {
-    stepper.step(StepsPR/2);
+    stepper.step(StepsPR/8);
 }
+
 void right()
 {
-    stepper.step(-StepsPR/2);
+    stepper.step(-StepsPR/8);
 }
+
 void Stop()
 {
     motor1.run(RELEASE);
@@ -199,6 +200,8 @@ void Stop()
     motor3.run(RELEASE);
     motor4.run(RELEASE);
 }
+
+
 
 //------------------RIDE N -------------------;
 
@@ -210,9 +213,11 @@ void setSpeed(int newSpeed)
     motor4.setSpeed(newSpeed);
 }
 
+
 //--------------------------------SENSORS-----------------------------------------------
 void SensorsSetup()
 {
+
     pinMode(Sensor_1_TrigPin, OUTPUT);
     pinMode(Sensor_1_EchoPin, INPUT);
 
@@ -235,6 +240,7 @@ void SensorsSetup()
     pinMode(Speed_Sensor, INPUT_PULLUP);
 
 }
+
 float GetDistance(int TrigPin, int EchoPin)
 {
     float distance,duration;
@@ -283,10 +289,11 @@ void scan_for_parking()
 
     if(parking_mode == 200)
     {
+
         blink(1);
         Stop();
-
         return;
+
     }
 
 
@@ -325,12 +332,9 @@ void scan_for_parking()
 
         blink(5);
         delay(2000);
-        //parallel_parking();
-        vertical_parking();
-        parking_mode = 200;
-        return;
 
-        /*
+
+
             //TODO check conditions whether do park parallel or vertical
             if(spot_length > car_length && spot_width > car_width)
             {
@@ -353,7 +357,10 @@ void scan_for_parking()
         }
 
 
-         */
+
+
+        parking_mode = 200;
+        return;
 
     }
     else
