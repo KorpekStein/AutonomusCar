@@ -26,6 +26,7 @@ const int Speed_Sensor = 30;
 //SPEED MIARA PIN
 const int StepsPR = 2048; //steps needed for max turn
 Stepper stepper = Stepper(StepsPR, 1,2,3,4);
+int StepperStep = 0;
 
 const int ledpin = 26;
 
@@ -57,13 +58,12 @@ int rps;
 float spot_length;
 float spot_width;
 
-float spot_width_coeficient;
+float spot_width_coeficient = 1.54;
 //---------------------------------
 
 AF_DCMotor motor1(1); //left back motor
 AF_DCMotor motor2(2); // right back motor
-AF_DCMotor motor3(3); //right front motor
-AF_DCMotor motor4(4); //left front motor
+
 
 
 //--------------------------------------
@@ -161,8 +161,6 @@ void MotorsSetup()
 {
     motor1.setSpeed(speed);
     motor2.setSpeed(speed);
-    motor3.setSpeed(speed);
-    motor4.setSpeed(speed);
     Stop();
 
     stepper.setSpeed(10);
@@ -173,34 +171,40 @@ void forward()
 {
     motor1.run(FORWARD);
     motor2.run(FORWARD);
-    motor3.run(FORWARD);
-    motor4.run(FORWARD);
+
 }
 
 void backward()
 {
     motor1.run(BACKWARD);
     motor2.run(BACKWARD);
-    motor3.run(BACKWARD);
-    motor4.run(BACKWARD);
+
 }
 
 void left()
 {
-    stepper.step(StepsPR/8);
+    if (StepperStep < StepsPR/4)
+    {
+        stepper.step(StepsPR / 8);
+        StepperStep += StepsPR/8;
+    }
+
 }
 
 void right()
 {
-    stepper.step(-StepsPR/8);
+    if (StepperStep < -StepsPR/4)
+    {
+        stepper.step(-StepsPR / 8);
+        StepperStep -= StepsPR/8;
+    }
 }
 
 void Stop()
 {
     motor1.run(RELEASE);
     motor2.run(RELEASE);
-    motor3.run(RELEASE);
-    motor4.run(RELEASE);
+
 }
 
 
@@ -211,8 +215,7 @@ void setSpeed(int newSpeed)
 {
     motor1.setSpeed(newSpeed);
     motor2.setSpeed(newSpeed);
-    motor3.setSpeed(newSpeed);
-    motor4.setSpeed(newSpeed);
+
 }
 
 
@@ -325,7 +328,7 @@ void scan_for_parking()
         time_change = time_2-time_1;
 
         rps = (steps/20)/time_change;
-        ms_speed = rps*100*tire_circumference;
+        ms_speed = rps*tire_circumference;
 
         //now whether we want car write n cm we need to: ride() delay(n second)
 
@@ -377,11 +380,14 @@ void scan_for_parking()
 }
 
 
-void parallel_parking()
+void parallel_parking(int side) // 0 is left, 1 is right
 {
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
 
-    float front_side_scan;
+
+
+
+   /* float front_side_scan;
     for(;;)
     {
         back();
@@ -420,7 +426,7 @@ void parallel_parking()
 
     parking_mode = 200;
     return;
-
+*/
 }
 
 void vertical_parking()
