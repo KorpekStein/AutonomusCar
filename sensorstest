@@ -30,8 +30,8 @@ void setup()
 
 void loop()
 {
-    Serial.write("Back Scan: ")
-    Serial.write(GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin));
+    Serial.write("Back Scan: ");
+    Serial.write(GetDistance(Sensor_1_TrigPin, Sensor_1_EchoPin));
     Serial.write('\n');
 
 }
