@@ -15,7 +15,7 @@ const float car_length = 30;
 const float car_width = 20;
 double tire_circumference = 49.5*3.14159265359; //in cm
 
-int speed = 100;
+int speed = 90;
 int ms_speed;
 //---------------usefull values------------
 
@@ -25,7 +25,7 @@ long time_change;
 
 long steps = 0;
 int rps;
-int max_turn = 500;
+int max_turn = 520;
 //-------------Spot properties----------
 
 float spot_length;
@@ -34,8 +34,8 @@ float spot_width;
 float spot_width_coeficient = 1.54;
 //---------------------------------
 
-AF_DCMotor motor1(1); //left back motor
-AF_DCMotor motor2(2); // right back motor
+AF_DCMotor motor1(3); //left back motor
+AF_DCMotor motor2(4); // right back motor
 
 
 
@@ -53,8 +53,9 @@ void setup()
 
 void loop()
 {
-
-    parallel_parking(0);
+    delay(500);
+    //parallel_parking(0);
+    vertical_parking();
     for(;;) delay(500);
 }
 
@@ -70,6 +71,7 @@ void MotorsSetup()
     stepper.setSpeed(225);
 
 }
+
 void forward()
 {
     motor1.run(FORWARD);
@@ -86,20 +88,20 @@ void backward()
 
 void left(int turn)
 {
-    if ((StepperStep+turn) <= max_turn)
+    if (StepperStep-turn >= -max_turn)
     {
         stepper.step(turn, BACKWARD, SINGLE);
-        StepperStep += turn;
+        StepperStep -= turn;
     }
 
 }
 
 void right(int turn)
 {
-    if (StepperStep+turn <= -max_turn)
+    if (StepperStep+turn <= max_turn)
     {
         stepper.step(turn, FORWARD, SINGLE);
-        StepperStep -= turn;
+        StepperStep += turn;
     }
 }
 
@@ -121,27 +123,28 @@ void parallel_parking(int side) // 0 is left, 1 is right
 
     if (side == 0)
     {
-        left(480);
+        left(512);
     }
     else
     {
-        right(480);
+        right(512);
     }
 
-    backward();
+    forward();
     delay(1000); // ride n millis
     Stop();
 
     if (side == 1)
     {
-        left(480);
-    }
-    else
-    {
-        right(480);
+        left(1024);
     }
 
-    backward();
+    else
+    {
+        right(1024);
+    }
+
+    forward();
     delay(1000); // ride n millis
     Stop();
 
@@ -170,9 +173,22 @@ void parallel_parking(int side) // 0 is left, 1 is right
 
     }
 */
+
     Stop();
+    left(480);
     parking_mode = 200;
     return;
 
 }
 
+
+void vertical_parking()
+{
+
+    left(512);
+    forward();
+    delay(1569); // ride n millis
+    Stop();
+    right(512);
+
+}
