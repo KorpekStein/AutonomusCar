@@ -1,5 +1,4 @@
 #include <AFMotor.h>
-#include <Stepper.h>
 #include <math.h>
 
 
@@ -7,7 +6,7 @@
 
 
 const int StepsPR = 2048; //steps needed for max turn
-Stepper stepper = Stepper(StepsPR, 1,2,3,4);
+AF_Stepper stepper(32, 1);
 int StepperStep = 0;
 
 int parking_mode = 0;
@@ -26,6 +25,7 @@ long time_change;
 
 long steps = 0;
 int rps;
+int max_turn = 500;
 //-------------Spot properties----------
 
 float spot_length;
@@ -67,7 +67,7 @@ void MotorsSetup()
     motor1.setSpeed(speed);
     motor2.setSpeed(speed);
     Stop();
-    stepper.setSpeed(8);
+    stepper.setSpeed(225);
 
 }
 void forward()
@@ -86,9 +86,9 @@ void backward()
 
 void left(int turn)
 {
-    if ((StepperStep+turn) <= StepsPR/4)
+    if ((StepperStep+turn) <= max_turn)
     {
-        stepper.step(turn);
+        stepper.step(turn, BACKWARD, SINGLE);
         StepperStep += turn;
     }
 
@@ -96,9 +96,9 @@ void left(int turn)
 
 void right(int turn)
 {
-    if (StepperStep+turn <= -StepsPR/4)
+    if (StepperStep+turn <= -max_turn)
     {
-        stepper.step(-turn);
+        stepper.step(turn, FORWARD, SINGLE);
         StepperStep -= turn;
     }
 }
@@ -121,11 +121,11 @@ void parallel_parking(int side) // 0 is left, 1 is right
 
     if (side == 0)
     {
-        left(StepsPR/4);
+        left(480);
     }
     else
     {
-        right(StepsPR/4);
+        right(480);
     }
 
     backward();
@@ -134,11 +134,11 @@ void parallel_parking(int side) // 0 is left, 1 is right
 
     if (side == 1)
     {
-        left(StepsPR/4);
+        left(480);
     }
     else
     {
-        right(StepsPR/4);
+        right(480);
     }
 
     backward();
