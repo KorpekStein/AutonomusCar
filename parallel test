@@ -67,7 +67,6 @@ void MotorsSetup()
     motor1.setSpeed(speed);
     motor2.setSpeed(speed);
     Stop();
-
     stepper.setSpeed(8);
 
 }
@@ -114,14 +113,6 @@ void Stop()
 
 
 //------------------RIDE N -------------------;
-
-void setSpeed(int newSpeed)
-{
-    motor1.setSpeed(newSpeed);
-    motor2.setSpeed(newSpeed);
-
-}
-
 
 
 void parallel_parking(int side) // 0 is left, 1 is right

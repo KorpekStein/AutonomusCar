@@ -36,6 +36,9 @@ const int ledpin = 26;
  *  Sensor1 - back
  *  Sensor2 - back_left
  *  Sensor3 - front_left
+ *  Sensor4 - front
+ *  Sensor5 - back_right
+ *  Sensor6 - front_right
  */
 //-----------Car_properties---------------------------
 
@@ -57,8 +60,9 @@ int rps;
 
 float spot_length;
 float spot_width;
-
 float spot_width_coeficient = 1.54;
+
+int spot_side; //0 is left, 1 is right
 //---------------------------------
 
 AF_DCMotor motor1(1); //left back motor
@@ -94,6 +98,7 @@ void loop()
 
     bt=Serial.read();
     control_type();
+    WillHit();
 
 }
 
@@ -107,6 +112,14 @@ void control_type()
         Stop();
         CarMode='A';
         parking_mode = 0;
+        if (GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin) > GetDistance(Sensor_5_TrigPin, Sensor_5_EchoPin))
+        {
+            spot_side = 0;
+        }
+        else
+        {
+            spot_side = 1;
+        }
 
     }
 
@@ -142,12 +155,12 @@ void control()
 
     if(bt=='L')
     {
-        left();
+        left(128);
     }
 
     if(bt=='R')
     {
-        right();
+        right(128);
     }
 
     if(bt=='S')
@@ -156,6 +169,8 @@ void control()
     }
 
 }
+
+
 //----------------MOTORS--------------
 void MotorsSetup()
 {
@@ -181,22 +196,22 @@ void backward()
 
 }
 
-void left()
+void left(int turn)
 {
-    if (StepperStep < StepsPR/4)
+    if ((StepperStep+turn) <= StepsPR/4)
     {
-        stepper.step(StepsPR / 8);
-        StepperStep += StepsPR/8;
+        stepper.step(turn);
+        StepperStep += turn;
     }
 
 }
 
-void right()
+void right(int turn)
 {
-    if (StepperStep < -StepsPR/4)
+    if (StepperStep+turn <= -StepsPR/4)
     {
-        stepper.step(-StepsPR / 8);
-        StepperStep -= StepsPR/8;
+        stepper.step(-turn);
+        StepperStep -= turn;
     }
 }
 
@@ -208,15 +223,15 @@ void Stop()
 }
 
 
-
-//------------------RIDE N -------------------;
-
-void setSpeed(int newSpeed)
+void WillHit()
 {
-    motor1.setSpeed(newSpeed);
-    motor2.setSpeed(newSpeed);
+    float front_scan = GetDistance(Sensor_4_TrigPin, Sensor_4_EchoPin);
+    if(front_scan < 5) Stop();
 
 }
+
+
+
 
 
 //--------------------------------SENSORS-----------------------------------------------
@@ -272,8 +287,6 @@ void scan_for_parking()
 {
 
 
-
-
     if(digitalRead(Speed_Sensor))
     {
         steps++;
@@ -284,13 +297,26 @@ void scan_for_parking()
     float back_side_scan;
 
 
+
     //--------------for left side-------------
 
-    back_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
-    front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+
+    if (spot_side == 1)
+    {
+        back_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+        front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+    }
+
+    else
+    {
+
+        back_side_scan = GetDistance(Sensor_5_TrigPin, Sensor_5_EchoPin);
+        front_side_scan = GetDistance(Sensor_6_TrigPin, Sensor_6_EchoPin);
+    }
 
 
     float change = front_side_scan - back_side_scan;
+
 
     if(parking_mode == 200)
     {
@@ -309,7 +335,7 @@ void scan_for_parking()
         time_1 = millis();
         steps = 0;
 
-
+        spot_side = 0;
         digitalWrite(ledpin, HIGH);
         spot_length = change;
         parking_mode = 1;
@@ -320,8 +346,11 @@ void scan_for_parking()
     }
 
 
+
     if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width) // jak wie ze ma rownolegle to podjezdza do konca (bez liczenia dystansu narazie)
     {
+
+
         Stop();
 
         time_2 = millis();
@@ -340,29 +369,29 @@ void scan_for_parking()
 
 
 
-            //TODO check conditions whether do park parallel or vertical
-            if(spot_length > car_length && spot_width > car_width)
-            {
-                vertical_parking();
-            }
-
-            if else(spot_length > car_width && spot_width*spot_width_coeficient > car_length)
-            {
-                parallel_parking();
-            }
-
-            else
-            {
-                parking_mode = 0;
-                spot_width = 0;
-                spot_length = 0;
-
-                return;
-            }
-
-                parking_mode = 200;
-
+        //TODO check conditions whether do park parallel or vertical
+        if(spot_length > car_length && spot_width > car_width)
+        {
+            vertical_parking();
         }
+
+        else if(spot_length > car_width && spot_width*spot_width_coeficient > car_length)
+        {
+            parallel_parking();
+        }
+
+        else
+        {
+            parking_mode = 0;
+            spot_width = 0;
+            spot_length = 0;
+
+            return;
+        }
+
+
+
+
 
 
 
@@ -380,94 +409,113 @@ void scan_for_parking()
 }
 
 
-void parallel_parking(int side) // 0 is left, 1 is right
+void parallel_parking()
 {
     //Funkcje do parkowania uzaleznione od wymiarow (formulka)
 
-
-
-
-   /* float front_side_scan;
-    for(;;)
+    if (spot_side == 0)
     {
-        back();
-        front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
-        if(front_side_scan > spot_length) break;
+        left(StepsPR/4);
     }
-    Stop();
-    delay(1000);
-    right();
-    delay(250);
-    Stop();
-    delay(500);
-
-
-
-    float back_scan;
-
-
-
-
-    for(;;)
+    else
     {
-        back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <8) break; //TO NIE DZIAALA
-        backward();
+        right(StepsPR/4);
     }
 
-
-
-    Stop();
-    delay(1000);
-    left();
-    delay(250);
+    backward();
+    delay(1000); // ride n millis
     Stop();
 
+    if (spot_side == 1)
+    {
+        left(StepsPR/4);
+    }
+    else
+    {
+        right(StepsPR/4);
+    }
 
+    backward();
+    delay(1000); // ride n millis
+    Stop();
+
+
+    float back_scan = GetDistance(Sensor_1_TrigPin, Sensor_1_EchoPin);
+    float front_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+
+
+
+    if (front_scan > back_scan)
+    {
+        for(;;)
+        {
+            back_scan = GetDistance(Sensor_1_TrigPin, Sensor_1_EchoPin);
+            front_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+
+            forward();
+            if (abs(front_scan - back_scan) < 4) break;
+        }
+
+    }
+    else
+    {
+        for(;;)
+        {
+            back_scan = GetDistance(Sensor_1_TrigPin, Sensor_1_EchoPin);
+            front_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
+
+            backward();
+            if (abs(front_scan - back_scan) < 4) break;
+        }
+
+    }
+
+    Stop();
     parking_mode = 200;
     return;
-*/
+
 }
 
 void vertical_parking()
 {
-    float front_side_scan;
-    for(;;)
-    {
-        backward();
-        front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
-        if(front_side_scan > spot_length) break;
-    }
-    Stop();
-    delay(1000);
-    right();
-    delay(500);
-    Stop();
-    delay(500);
-
-
-
-    float back_scan;
-
-
-
-
-    for(;;)
-    {
-        backward();
-        back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
-        if(back_scan <8) break; //TO NIE DZIAALA
-    }
-
-
-    Stop();
-    delay(1000);
-
-
-
-    parking_mode = 200;
-    return;
-
+    /*
+      float front_side_scan;
+      for(;;)
+      {
+          backward();
+          front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
+          if(front_side_scan > spot_length) break;
+      }
+      Stop();
+      delay(1000);
+      right(Steps);
+      delay(500);
+      Stop();
+      delay(500);
+  
+  
+  
+      float back_scan;
+  
+  
+  
+  
+      for(;;)
+      {
+          backward();
+          back_scan = GetDistance(Sensor_1_TrigPin,Sensor_1_EchoPin);
+          if(back_scan <8) break; //TO NIE DZIAALA
+      }
+  
+  
+      Stop();
+      delay(1000);
+  
+  
+  
+      parking_mode = 200;
+      return;
+    */
 }
 
 void blink(int n)
