@@ -1,0 +1,79 @@
+
+//----------------PINY---------------
+
+const int Sensor_1_EchoPin = 53;
+const int Sensor_1_TrigPin = 52;
+
+/*
+const int Sensor_2_EchoPin = 23;
+const int Sensor_2_TrigPin = 22;
+const int Sensor_3_EchoPin = 24;
+const int Sensor_3_TrigPin = 25;
+
+
+const int Sensor_4_EchoPin = 11;
+const int Sensor_4_TrigPin = 12;
+const int Sensor_5_EchoPin = 13;
+const int Sensor_5_TrigPin = 14;
+const int Sensor_6_EchoPin = 15;
+const int Sensor_6_TrigPin = 16;
+*/
+
+
+
+void setup()
+{
+    Serial.begin(9600);
+    SensorsSetup();
+}
+
+
+void loop()
+{
+    Serial.write("Back Scan: ")
+    Serial.write(GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin));
+    Serial.write('\n');
+
+}
+
+
+void SensorsSetup()
+{
+       pinMode(Sensor_1_TrigPin, OUTPUT);
+       pinMode(Sensor_1_EchoPin, INPUT);
+/*
+    pinMode(Sensor_2_TrigPin, OUTPUT);
+    pinMode(Sensor_2_EchoPin, INPUT);
+
+    pinMode(Sensor_3_TrigPin, OUTPUT);
+    pinMode(Sensor_3_EchoPin, INPUT);
+
+
+    pinMode(Sensor_4_TrigPin, OUTPUT);
+    pinMode(Sensor_4_EchoPin, INPUT);
+
+    pinMode(Sensor_5_TrigPin, OUTPUT);
+    pinMode(Sensor_5_EchoPin, INPUT);
+
+    pinMode(Sensor_6_TrigPin, OUTPUT);
+    pinMode(Sensor_6_EchoPin, INPUT);
+
+*/
+
+}
+float GetDistance(int TrigPin, int EchoPin)
+{
+    float distance,duration;
+
+    digitalWrite(TrigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(TrigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(TrigPin, LOW);
+    duration = pulseIn(EchoPin, HIGH);
+    distance = duration * 0.034 / 2;
+
+    return distance;
+}
+
+
