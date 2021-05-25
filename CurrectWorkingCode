@@ -22,6 +22,8 @@ const int Sensor_6_TrigPin = 16;
  *  Sensor4 - front
  *  Sensor5 - back_right
  *  Sensor6 - front_right
+ *  ledpin - 26
+ *  Speed Sensor pin - 30
  */
 
 const int Speed_Sensor = 30;
@@ -155,7 +157,7 @@ void control_type()
 
     }
 
-    else if(bt=='x')
+    if(bt=='x')
     {
         Stop();
         CarMode='C';
@@ -166,7 +168,7 @@ void control_type()
         control();
     }
 
-    else if (CarMode == 'A')
+    if (CarMode == 'A')
     {
         parking();
     }
@@ -279,13 +281,9 @@ float GetDistance(int TrigPin, int EchoPin) //return distance obtained from sens
 void parking()
 {
 
-    WillHit(); //safety procedure
+    //WillHit(); //safety procedure
 
-    if(digitalRead(Speed_Sensor))
-    {
-        steps++;
-        while(digitalRead(Speed_Sensor));
-    }
+
 
     float front_side_scan;
     float back_side_scan;
@@ -363,7 +361,7 @@ void parking()
     }
 
 
-        //when car is parked
+    //when car is parked
     else if(parking_mode == 200)
     {
         blink(1);
@@ -373,9 +371,14 @@ void parking()
     else
     {
         forward();
-
-
+        if(digitalRead(Speed_Sensor))
+        {
+            steps++;
+            while(digitalRead(Speed_Sensor));
+        }
     }
+
+
 }
 
 
