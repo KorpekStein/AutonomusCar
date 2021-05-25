@@ -59,7 +59,7 @@ int speed = 90;
 float spot_length;
 float spot_width;
 float spot_width_coefficient_p = 2.2;
-float spot_width_coefficient_v =  1.2;
+float spot_width_coefficient_v =  2.1;
 
 int spot_side; //0 is left, 1 is right
 //---------------------------------
@@ -293,7 +293,7 @@ void parking()
 
     //getting information to look for spot
 
-    if (spot_side == 1)
+    if (spot_side == 0)
     {
         back_side_scan = GetDistance(Sensor_2_TrigPin, Sensor_2_EchoPin);
         front_side_scan = GetDistance(Sensor_3_TrigPin, Sensor_3_EchoPin);
@@ -311,19 +311,18 @@ void parking()
 
 
 
-    //fillfulled when the beginning of spot is found
+    //fulfilled when the beginning of spot is found
     if (change  > car_width + 2 && parking_mode == 0)
     {
         steps = 0;
-        spot_side = 0;
-        digitalWrite(ledpin, HIGH);
+        blink(1);
         spot_length = change;
         parking_mode = 1;
 
     }
 
-        //fullfilled when the end of spot is found (whole car passed the spot)
-    else if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width)
+    //fulfilled when the end of spot is found (whole car passed the spot)
+    else if (parking_mode==1 && back_side_scan < spot_length - 5 && front_side_scan < spot_length - 5)
     {
 
         Stop();
@@ -342,7 +341,7 @@ void parking()
             vertical_parking();
         }
 
-        else if(spot_length > car_width && spot_width * spot_width_coefficient_p > car_length + 2)
+        else if(spot_length > car_width + 6 && spot_width * spot_width_coefficient_p > car_length)
         {
             parallel_parking();
         }
@@ -367,6 +366,7 @@ void parking()
         Stop();
         return;
     }
+
     else
     {
         forward();
@@ -376,7 +376,6 @@ void parking()
             while(digitalRead(Speed_Sensor));
         }
     }
-
 
 }
 
@@ -411,6 +410,8 @@ void parallel_parking()
     backward();
     delay(1000); // ride n millis
     Stop();
+    left(480);
+
 
     //adjustments
     float back_scan;
@@ -437,7 +438,6 @@ void parallel_parking()
 
 
     Stop();
-    left(480);
     parking_mode = 200;
     return;
 
@@ -466,10 +466,11 @@ void vertical_parking()
     return;
 
 }
+
 /* THE MAP OF BLINKS
  * constant blinking - car parked
+ * 1 blink - spot found
  * 5 blinks - starts parking
- *
  */
 
 void blink(int n)
