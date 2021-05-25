@@ -69,6 +69,10 @@ void setup()
     MotorsSetup();
     SensorsSetup();
     Serial.print("Setup finished correctly\n");
+
+    while (!Serial) {
+        ;
+    }
 }
 
 
