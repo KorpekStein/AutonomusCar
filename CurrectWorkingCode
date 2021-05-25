@@ -46,8 +46,8 @@ const int max_turn = 520;
 
 //-----------Car_properties---------------------------
 
-const float car_length = 30;
-const float car_width = 20;
+const float car_length = 29;
+const float car_width = 15;
 double tire_circumference = 4.95*3.14159265359; //in cm
 
 int speed = 90;
@@ -314,7 +314,6 @@ void parking()
     //fillfulled when the beginning of spot is found
     if (change > car_width && parking_mode == 0)
     {
-
         steps = 0;
         spot_side = 0;
         digitalWrite(ledpin, HIGH);
@@ -326,7 +325,6 @@ void parking()
         //fullfilled when the end of spot is found (whole car passed the spot)
     else if (parking_mode==1 && back_side_scan < car_width && front_side_scan < car_width)
     {
-
 
         Stop();
 
