@@ -48,7 +48,7 @@ const int max_turn = 520;
 
 const float car_length = 30;
 const float car_width = 20;
-double tire_circumference = 49.5*3.14159265359; //in cm
+double tire_circumference = 4.95*3.14159265359; //in cm
 
 int speed = 90;
 
@@ -62,7 +62,7 @@ float spot_width_coefficient = 1.54; //TODO zmierz to
 
 int spot_side; //0 is left, 1 is right
 //---------------------------------
-byte d;
+
 AF_DCMotor motor1(3); //left back motor
 AF_DCMotor motor2(4); // right back motor
 
@@ -112,7 +112,7 @@ void SensorsSetup()
     pinMode(Sensor_6_TrigPin, OUTPUT);
     pinMode(Sensor_6_EchoPin, INPUT);
 
-    pinMode(Speed_Sensor, INPUT_PULLUP);
+    pinMode(Speed_Sensor, INPUT);
 
 }
 
