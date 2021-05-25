@@ -58,7 +58,8 @@ int speed = 90;
 
 float spot_length;
 float spot_width;
-float spot_width_coefficient = 1.54; //TODO zmierz to
+float spot_width_coefficient_p = 2.2;
+float spot_width_coefficient_v =  1.2;
 
 int spot_side; //0 is left, 1 is right
 //---------------------------------
@@ -130,7 +131,6 @@ void loop()
 
     bt=Serial.read();
     control_type();
-
 
 }
 
@@ -205,7 +205,7 @@ void control()
 
 
 //----------------MOTORS--------------
-
+//group of functions responsible for driving
 void forward()
 {
     motor1.run(FORWARD);
@@ -245,7 +245,7 @@ void Stop()
 
 }
 
-
+//functions checking if car will hit anything while scanning for park
 void WillHit()
 {
     float front_scan = GetDistance(Sensor_4_TrigPin, Sensor_4_EchoPin);
@@ -281,7 +281,7 @@ float GetDistance(int TrigPin, int EchoPin) //return distance obtained from sens
 void parking()
 {
 
-    //WillHit(); //safety procedure
+    WillHit(); //safety procedure
 
 
 
@@ -312,7 +312,7 @@ void parking()
 
 
     //fillfulled when the beginning of spot is found
-    if (change > car_width && parking_mode == 0)
+    if (change  > car_width + 2 && parking_mode == 0)
     {
         steps = 0;
         spot_side = 0;
@@ -337,17 +337,17 @@ void parking()
 
 
 
-        if(spot_length > car_length && spot_width > car_width) //TODO zmierz najmniej
+        if(spot_length > car_length + 2 && spot_width > car_width * spot_width_coefficient_v)
         {
             vertical_parking();
         }
 
-        else if(spot_length > car_width && spot_width*spot_width_coefficient > car_length)
+        else if(spot_length > car_width && spot_width * spot_width_coefficient_p > car_length + 2)
         {
             parallel_parking();
         }
 
-            // when the spot measurements are not enough for any parking
+        // when the spot measurements are not enough for any parking
         else
         {
             parking_mode = 0;
@@ -355,6 +355,7 @@ void parking()
             spot_length = 0;
             return;
         }
+        return;
 
     }
 
@@ -467,9 +468,10 @@ void vertical_parking()
 }
 /* THE MAP OF BLINKS
  * constant blinking - car parked
- *
+ * 5 blinks - starts parking
  *
  */
+
 void blink(int n)
 {
     for(int i=0;i<n;i++)
